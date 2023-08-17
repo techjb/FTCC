@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34009.444
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution items", "{64E3D627-0BED-4BE1-B5D8-5D3758B7557B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ftcc_console", "ftcc_console\ftcc_console.csproj", "{04BC996E-996A-4A16-BB6D-4724B4F6F7B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ftcc_lib", "ftcc_lib\ftcc_lib.csproj", "{5149074C-8174-4900-BC72-E92A2A3A0572}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{04BC996E-996A-4A16-BB6D-4724B4F6F7B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04BC996E-996A-4A16-BB6D-4724B4F6F7B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04BC996E-996A-4A16-BB6D-4724B4F6F7B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04BC996E-996A-4A16-BB6D-4724B4F6F7B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5149074C-8174-4900-BC72-E92A2A3A0572}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5149074C-8174-4900-BC72-E92A2A3A0572}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5149074C-8174-4900-BC72-E92A2A3A0572}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5149074C-8174-4900-BC72-E92A2A3A0572}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8EAC4100-13B1-434C-B518-17A68865B8B4}
+	EndGlobalSection
+EndGlobal
