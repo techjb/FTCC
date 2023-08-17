@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ftcc_lib
+﻿namespace ftcc_lib
 {
     public struct FTCCOptions
     {

@@ -182,7 +182,7 @@ namespace ftcc_lib
                     predictedClass = item.Key;
                 }
             }
-            return predictedClass;
+            return predictedClass!;
         }
 
         private List<Tuple<string, string>> CsvToList(string file)
