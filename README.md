@@ -1,8 +1,9 @@
 # FTCC C#
 
-FTCC: Fast Text Classification with Compressors dictionary
+FTCC: Fast Text Classification with Compressors dictionary.
 
-This project is a C# implementation of the [FTCC](https://github.com/cyrilou242/ftcc) project for text classification. 
+This project is a C# implementation of the [FTCC](https://github.com/cyrilou242/ftcc) project for text classification.
+
 The main advantage of this type of classification is that it uses [ZSTD](https://github.com/facebook/zstd) compression, 
 which allows for compression using dictionaries that have been generated beforehand, 
 thereby achieving significant speed improvements when classifying a text.
