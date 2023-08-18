@@ -25,14 +25,21 @@ namespace ftcc_console
             //string trainFile = @"C:\Users\Chus\Downloads\ag_news_train.csv";
             //string testFile = @"C:\Users\Chus\Downloads\ag_news_test.csv";
 
-            string trainFile = @"C:\Users\Chus\Downloads\DBPEDIA_test.csv";
-            string testFile = @"C:\Users\Chus\Downloads\DBPEDIA_train.csv";
+            string trainFile = @"C:\Users\Chus\Downloads\DBPEDIA_train.csv";
+            string testFile = @"C:\Users\Chus\Downloads\DBPEDIA_test.csv";
+
+            //string trainFile = @"C:\Users\Chus\Downloads\oh-train-stemmed.csv";
+            //string testFile = @"C:\Users\Chus\Downloads\oh-test-stemmed.csv";
+
+            //string trainFile = @"C:\Users\Chus\Downloads\kinnwes-train.csv";
+            //string testFile = @"C:\Users\Chus\Downloads\kinnwes-test.csv";
 
             FTCCOptions fTCCOptions = new()
             {
+                PreloadedDictionaries = null,       // File path for preloaded dictionaries (ignores training file). Default: null;
                 TrainFile = trainFile,              // File path for csv train file
                 ParallelismOnCalc = false,          // Use paralelism on calc. Default: false
-                ParallelismToInitialize = false,    // Use paralelism to initialize dictionaries. Default: false
+                ParallelismToInitialize = false,    // Use paralelism to initialize dictionaries. Default: false (if true, diccionaries will be a bit different for each execution)
                 ParallelismOnTestFile = true,       // Use paralelism for each test. Default: false
                 CompressionLevel = 3,               // Compression level for dictionaries. Default: 3
                 CompressorsPerClass = 3,            // Number of compressors per class. Default: 3

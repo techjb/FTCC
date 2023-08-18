@@ -2,7 +2,7 @@
 
 FTCC: Fast Text Classification with Compressors dictionary
 
-This project is a c# implementation of the [FTCC](https://github.com/cyrilou242/ftcc) project for text classification. 
+This project is a C# implementation of the [FTCC](https://github.com/cyrilou242/ftcc) project for text classification. 
 The main advantage of this type of classification is that it uses [ZSTD](https://github.com/facebook/zstd) compression, 
 which allows for compression using dictionaries that have been generated beforehand, 
 thereby achieving significant speed improvements when classifying a text.
@@ -11,10 +11,11 @@ thereby achieving significant speed improvements when classifying a text.
 
 All tests have been done at a compression level of 3, which is the default compression level.
 
-| Compressors per class         | AGNews  | DBpedia  |
-|-------------------------------|---------|----------|
-| CPC 1                         | 0.837   | 0.893    |
-| CPC 3                         |         |          |
+| Compressors per class         | AGNews  | DBpedia  | R8       | R52      | Ohsumed  | Kinnews  |
+|-------------------------------|---------|----------|----------|----------|----------|----------|
+| CPC 1                         | 0.837   | 0.892    | 0.908    | 0.818    | 0.426    | 0.754    |
+| CPC 3                         | 0.876   | 0.918    | 0.912    | 0.803    | 0.374    | 0.766    |
+| CPC 5                         | 0.881   | 0.925    | 0.896    | 0.776    | 0.370    | 0.756    |
 
 
 ## Usage

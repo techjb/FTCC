@@ -1,7 +1,4 @@
-﻿using CsvHelper;
-using CsvHelper.Configuration;
-using System.Globalization;
-using System.Text;
+﻿using System.Text;
 using ZstdNet;
 
 namespace ftcc_lib
@@ -10,7 +7,8 @@ namespace ftcc_lib
     {
         private readonly FTCCOptions FTCCOptions;
         private readonly Dictionary<string, List<byte[]>> TrainingList = new();
-        private readonly Dictionary<string, byte[]> TrainingDictionary = new();
+        private readonly Dictionary<string, List<List<byte[]>>> TrainingListChunked = new();
+        private readonly Dictionary<string, List<byte[]>> Dictionaries = new();
         private int Total = 0;
         private int Processed = 0;
         private int Sucess = 0;
@@ -18,13 +16,19 @@ namespace ftcc_lib
         public FTCC(FTCCOptions fTCCOptions)
         {
             FTCCOptions = fTCCOptions;
-            var list = CsvToList(FTCCOptions.TrainFile);
-            Initialize(list);
+            if (FTCCOptions.PreloadedDictionaries != null)
+            {
+                Dictionaries = Serialization.Deserialize(FTCCOptions.PreloadedDictionaries);
+            }
+            else
+            {
+                Initialize();
+            }
         }
 
         public double PredictFile(string testFile)
         {
-            var list = CsvToList(testFile);
+            var list = Csv.ToList(FTCCOptions, testFile);
             Total = list.Count;
             Processed = 0;
             Sucess = 0;
@@ -101,10 +105,12 @@ namespace ftcc_lib
             return Math.Round((float)Sucess / Processed, 3);
         }
 
-        private void Initialize(List<Tuple<string, string>> list)
+        private void Initialize()
         {
+            var list = Csv.ToList(FTCCOptions, FTCCOptions.TrainFile);
             InitializeTraingList(list);
-            InitializeTrainingDictionary();
+            MakeTrainingListChunks();
+            InitializeDictionaries();
         }
 
         private void InitializeTraingList(List<Tuple<string, string>> list)
@@ -161,87 +167,128 @@ namespace ftcc_lib
             }
         }
 
-        private void InitializeTrainingDictionary()
+        private void MakeTrainingListChunks()
         {
-            TrainingDictionary.Clear();
+            TrainingListChunked.Clear();
+            foreach (var item in TrainingList)
+            {
+                var values = DivideList(item.Value);
+                TrainingListChunked.Add(item.Key, values);
+            }
+        }
+
+        List<List<byte[]>> DivideList(List<byte[]> mainList)
+        {
+            int size = mainList.Count / FTCCOptions.CompressorsPerClass;
+            int remainder = mainList.Count % FTCCOptions.CompressorsPerClass;
+
+            List<List<byte[]>> dividedList = new();
+
+            int startIndex = 0;
+            for (int i = 0; i < FTCCOptions.CompressorsPerClass; i++)
+            {
+                int currentSize = size + (i < remainder ? 1 : 0);
+                List<byte[]> subList = mainList.GetRange(startIndex, currentSize);
+                dividedList.Add(subList);
+                startIndex += currentSize;
+            }
+
+            return dividedList;
+        }
+
+        private void InitializeDictionaries()
+        {
+            Dictionaries.Clear();
             if (FTCCOptions.ParallelismToInitialize)
             {
-                InitializeTrainingDictionaryWithParalellism();
+                InitializeDictionariesWithParalellism();
             }
             else
             {
-                InitializeTrainingDictionaryWithoutParalellism();
+                InitializeDictionariesWithoutParalellism();
             }
         }
 
-        private void InitializeTrainingDictionaryWithParalellism()
+        private void InitializeDictionariesWithParalellism()
         {
             var sync = new object();
-            Parallel.ForEach(TrainingList, item =>
+            Parallel.ForEach(TrainingListChunked, items =>
             {
-                byte[] dictionary = DictBuilder.TrainFromBuffer(item.Value);
-                lock (sync)
-                {
-                    TrainingDictionary.Add(item.Key, dictionary);
-                }
+                AddToDictionary(items);
             });
         }
 
-        private void InitializeTrainingDictionaryWithoutParalellism()
+        private void InitializeDictionariesWithoutParalellism()
         {
-            foreach (var item in TrainingList)
+            foreach (var items in TrainingListChunked)
             {
-                byte[] dictionary = DictBuilder.TrainFromBuffer(item.Value);
-                TrainingDictionary.Add(item.Key, dictionary);
+                AddToDictionary(items);
+            }
+        }
+
+        private void AddToDictionary(KeyValuePair<string, List<List<byte[]>>> items, object? sync = null)
+        {
+            List<byte[]> list = new();
+            foreach (var item in items.Value)
+            {
+                byte[] dictionary = DictBuilder.TrainFromBuffer(item);
+                list.Add(dictionary);
+
+            }
+            if (sync != null)
+            {
+                lock (sync)
+                {
+                    Dictionaries.Add(items.Key, list);
+                }
+            }
+            else
+            {
+                Dictionaries.Add(items.Key, list);
             }
         }
 
         public string Predict(string text)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(text);
-            int? minimumSize = null;
+            double? minimumSize = null;
             string? predictedClass = null;
-            foreach (var item in TrainingDictionary)
+            foreach (var item in Dictionaries)
             {
-                var compressionOptions = new CompressionOptions(item.Value, FTCCOptions.CompressionLevel);
-                using var compressor = new Compressor(compressionOptions);
-                var compressed = compressor.Wrap(bytes);
-                if (minimumSize == null || compressed.Length < minimumSize)
+                var length = GetLength(item.Value, bytes);
+                if (length ==null)
                 {
-                    minimumSize = compressed.Length;
+                    continue;
+                }
+                if (minimumSize == null || length < minimumSize)
+                {
+                    minimumSize = length;
                     predictedClass = item.Key;
                 }
             }
             return predictedClass!;
         }
 
-        private List<Tuple<string, string>> CsvToList(string file)
+        private double? GetLength(List<byte[]> items, byte[] bytes)
         {
-            using var streamReader = new StreamReader(file);
-            var csvConfiguration = new CsvConfiguration(CultureInfo.InvariantCulture)
+            List<int> list = new();
+            foreach (var item in items)
             {
-                BadDataFound = null,
-                HasHeaderRecord = FTCCOptions.HasHeaderRecord,
-            };
-            using var csvReader = new CsvReader(streamReader, csvConfiguration);
-            if (FTCCOptions.HasHeaderRecord)
-            {
-                csvReader.Read();
+                var compressionOptions = new CompressionOptions(item, FTCCOptions.CompressionLevel);
+                using var compressor = new Compressor(compressionOptions);
+                var compressed = compressor.Wrap(bytes);
+                list.Add(compressed.Length);
             }
-            var records = new List<Tuple<string, string>>();
-            while (csvReader.Read())
+            if(list.Count.Equals(0))
             {
-                var text = csvReader.GetField<string>(FTCCOptions.TextColumn);
-                var label = csvReader.GetField<string>(FTCCOptions.LabelColumn);
+                return null;
+            }
+            return list.Average();
+        }
 
-                if (text == null || label == null)
-                {
-                    continue;
-                }
-                Tuple<string, string> record = Tuple.Create(text, label);
-                records.Add(record);
-            }
-            return records;
+        public void SerializeDiccionary(string path)
+        {
+            Serialization.Serialize(path, Dictionaries);
         }
     }
 }
