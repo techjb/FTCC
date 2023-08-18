@@ -1,5 +1,6 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using ZstdNet;
@@ -93,7 +94,7 @@ namespace ftcc_lib
 
             Console.WriteLine(
                 "Processed: " + Processed + "/" + Total + " (" + processedPercentage + "%) " +
-                "Sucess ratio: " + Sucess + " (" + successRatio + ")");
+                "Sucess: " + Sucess + " (" + successRatio + ")");
         }
 
         private double GetSucessRatio()
@@ -110,9 +111,9 @@ namespace ftcc_lib
         private void InitializeTraingList(List<Tuple<string, string>> list)
         {
             TrainingList.Clear();
-            if (FTCCOptions.ParallelismOnTestFile)
+            if (FTCCOptions.ParallelismToInitialize)
             {
-                //InitializeWithParalellism(list);
+                InitializeWithParalellism(list);
             }
             else
             {
@@ -121,19 +122,19 @@ namespace ftcc_lib
         }
 
 
-        //private void InitializeWithParalellism(List<Tuple<string, string>> list)
-        //{
-        //    var sync = new object();
-        //    Parallel.ForEach(list, item =>
-        //    {
-        //        long compressedLength = GZipLength(item.Item1);
-        //        var tuple = Tuple.Create(item.Item1, item.Item2, compressedLength);
-        //        lock (sync)
-        //        {
-        //            TrainingList.Add(tuple);
-        //        }
-        //    });
-        //}
+        private void InitializeWithParalellism(List<Tuple<string, string>> list)
+        {
+            var sync = new object();
+            Parallel.ForEach(list, item =>
+            {
+                string key = item.Item2;
+                var bytes = Encoding.UTF8.GetBytes(item.Item1);
+                lock (sync)
+                {
+                    AddToTrainigList(key, bytes);
+                }
+            });
+        }
 
         private void InitializeWithoutParalellism(List<Tuple<string, string>> list)
         {
@@ -141,24 +142,54 @@ namespace ftcc_lib
             {
                 string key = item.Item2;
                 var bytes = Encoding.UTF8.GetBytes(item.Item1);
-                if (TrainingList.ContainsKey(key))
+                AddToTrainigList(key, bytes);
+            }
+        }
+
+        private void AddToTrainigList(string key, byte[] bytes)
+        {
+            if (TrainingList.ContainsKey(key))
+            {
+                TrainingList[key].Add(bytes);
+            }
+            else
+            {
+                var listItems = new List<byte[]>
                 {
-                    TrainingList[key].Add(bytes);
-                }
-                else
-                {
-                    var listItems = new List<byte[]>
-                    {
-                        bytes
-                    };
-                    TrainingList.Add(key, listItems);
-                }
+                    bytes
+                };
+                TrainingList.Add(key, listItems);
             }
         }
 
         private void InitializeTrainingDictionary()
         {
             TrainingDictionary.Clear();
+            if (FTCCOptions.ParallelismToInitialize)
+            {
+                InitializeTrainingDictionaryWithParalellism();
+            }
+            else
+            {
+                InitializeTrainingDictionaryWithoutParalellism();
+            }
+        }
+
+        private void InitializeTrainingDictionaryWithParalellism()
+        {
+            var sync = new object();
+            Parallel.ForEach(TrainingList, item =>
+            {
+                byte[] dictionary = DictBuilder.TrainFromBuffer(item.Value);
+                lock (sync)
+                {
+                    TrainingDictionary.Add(item.Key, dictionary);
+                }
+            });
+        }
+
+        private void InitializeTrainingDictionaryWithoutParalellism()
+        {
             foreach (var item in TrainingList)
             {
                 byte[] dictionary = DictBuilder.TrainFromBuffer(item.Value);
@@ -173,8 +204,8 @@ namespace ftcc_lib
             string? predictedClass = null;
             foreach (var item in TrainingDictionary)
             {
-                var compreswsorOptions = new CompressionOptions(item.Value);
-                var compressor = new Compressor(compreswsorOptions);                
+                var compressionOptions = new CompressionOptions(item.Value, FTCCOptions.CompressionLevel);
+                var compressor = new Compressor(compressionOptions);
                 var compressed = compressor.Wrap(bytes);
                 if (minimumSize == null || compressed.Length < minimumSize)
                 {

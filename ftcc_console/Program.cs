@@ -22,17 +22,20 @@ namespace ftcc_console
 
         private static void Run()
         {
-            /* 
-            
-             */
-            string trainFile = @"C:\Users\Chus\Downloads\ag_news_train.csv";
-            string testFile = @"C:\Users\Chus\Downloads\ag_news_test.csv";
+            //string trainFile = @"C:\Users\Chus\Downloads\ag_news_train.csv";
+            //string testFile = @"C:\Users\Chus\Downloads\ag_news_test.csv";
+
+            string trainFile = @"C:\Users\Chus\Downloads\DBPEDIA_test.csv";
+            string testFile = @"C:\Users\Chus\Downloads\DBPEDIA_train.csv";
 
             FTCCOptions fTCCOptions = new()
             {
                 TrainFile = trainFile,          // File path for csv train file
-                ParallelismOnCalc = false,       // Use paralelism on calc. Default: false
-                ParallelismOnTestFile = false,  // Use paralelism for each test. Default: false
+                ParallelismOnCalc = false,      // Use paralelism on calc. Default: false
+                ParallelismToInitialize = false,// Use paralelism to initialize dictionaries. Default: false
+                ParallelismOnTestFile = true,   // Use paralelism for each test. Default: false
+                CompressionLevel = 3,           // Compression level for dictionaries. Default: 3
+                CompressorsPerClass = 3,        // Number of compressors per class. Default: 3
                 TextColumn = 0,                 // Text column number in csv file. Default: 0
                 LabelColumn = 1,                // Label column number in csv file. Default: 1
                 HasHeaderRecord = true,         // Csv has header record. Deault: true
@@ -41,10 +44,11 @@ namespace ftcc_console
 
             FTCC fTCC = new(fTCCOptions);
             double result = fTCC.PredictFile(testFile);
+            Console.WriteLine();
             Console.WriteLine(result);
 
             //string text = "Socialites unite dolphin groups Dolphin groups, or \"pods\", rely on socialites to keep them from collapsing, scientists claim.";
-            //var prediction = fTCC.Predict(text); // should be 3
+            //var prediction = fTCC.Predict(text); // must be 3
             //Console.WriteLine(prediction);
         }
         private static void End()

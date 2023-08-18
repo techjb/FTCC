@@ -6,7 +6,13 @@
 
         public bool ParallelismOnCalc { get; set; } = false;
 
+        public bool ParallelismToInitialize { get; set; } = false;
+
         public bool ParallelismOnTestFile { get; set; } = false;
+
+        public int CompressionLevel { get; set; } = 3;
+
+        public int CompressorsPerClass { get; set; } = 3;
 
         public int TextColumn { get; set; } = 0;
 
