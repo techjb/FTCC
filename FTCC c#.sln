@@ -5,7 +5,7 @@ VisualStudioVersion = 17.7.34009.444
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution items", "{64E3D627-0BED-4BE1-B5D8-5D3758B7557B}"
 	ProjectSection(SolutionItems) = preProject
-		README.txt = README.txt
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ftcc_console", "ftcc_console\ftcc_console.csproj", "{04BC996E-996A-4A16-BB6D-4724B4F6F7B3}"

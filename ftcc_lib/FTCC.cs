@@ -1,6 +1,5 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using ZstdNet;
@@ -205,7 +204,7 @@ namespace ftcc_lib
             foreach (var item in TrainingDictionary)
             {
                 var compressionOptions = new CompressionOptions(item.Value, FTCCOptions.CompressionLevel);
-                var compressor = new Compressor(compressionOptions);
+                using var compressor = new Compressor(compressionOptions);
                 var compressed = compressor.Wrap(bytes);
                 if (minimumSize == null || compressed.Length < minimumSize)
                 {

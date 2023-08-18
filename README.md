@@ -13,9 +13,8 @@ All tests have been done at a compression level of 3, which is the default compr
 
 | Compressors per class         | AGNews  | DBpedia  |
 |-------------------------------|---------|----------|
-| CPC 1                         | 0.837   | 0.942    |
+| CPC 1                         | 0.837   | 0.893    |
 | CPC 3                         |         |          |
-
 
 
 ## Usage
