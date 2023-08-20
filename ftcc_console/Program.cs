@@ -22,10 +22,10 @@ namespace ftcc_console
 
         private static void Run()
         {
-            //string dictionariesPath = @"C:\Users\Chus\Downloads\dictionaries.ftcc";
+            string dictionariesPath = @"C:\Users\Chus\Downloads\ag_news_dictionary.ftcc";            
 
-            //string trainFile = @"C:\Users\Chus\Downloads\ag_news_train.csv";
-            //string testFile = @"C:\Users\Chus\Downloads\ag_news_test.csv";
+            string trainFile = @"C:\Users\Chus\Downloads\ag_news_train.csv";
+            string testFile = @"C:\Users\Chus\Downloads\ag_news_test.csv";
 
             //string trainFile = @"C:\Users\Chus\Downloads\DBPEDIA_train.csv";
             //string testFile = @"C:\Users\Chus\Downloads\DBPEDIA_test.csv";
@@ -36,20 +36,20 @@ namespace ftcc_console
             //string trainFile = @"C:\Users\Chus\Downloads\kinnwes-train.csv";
             //string testFile = @"C:\Users\Chus\Downloads\kinnwes-test.csv";
 
-            string trainFile = @"C:\Users\Chus\Downloads\yahooanswer_train.csv";
-            string testFile = @"C:\Users\Chus\Downloads\yahooanswer_test.csv";
+            //string trainFile = @"C:\Users\Chus\Downloads\yahooanswer_train.csv";
+            //string testFile = @"C:\Users\Chus\Downloads\yahooanswer_test.csv";
 
             FTCCOptions fTCCOptions = new()
             {
-                DictionariesPath = null,                // File path for preloaded dictionaries (ignores training file). Default: null;
+                DictionariesPath = dictionariesPath,    // File path for preloaded dictionaries (ignores training file). Default: null;
                 TrainFile = trainFile,                  // File path for csv train file
                 ParallelismToInitialize = false,        // Use paralelism to initialize dictionaries. Default: false (if true, diccionaries will be a bit different for each execution)
                 ParallelismOnTestFile = true,           // Use paralelism for each test. Default: false
                 CompressionLevel = 3,                   // Compression level for dictionaries. Default: 3
-                CompressorsPerClass = 5,                // Number of compressors per class. Default: 3
-                TextColumn = 1,                         // Text column number in csv file. Default: 0
-                LabelColumn = 0,                        // Label column number in csv file. Default: 1
-                HasHeaderRecord = false,                 // Csv has header record. Deault: true
+                CompressorsPerClass = 3,                // Number of compressors per class. Default: 3
+                TextColumn = 0,                         // Text column number in csv file. Default: 0
+                LabelColumn = 1,                        // Label column number in csv file. Default: 1
+                HasHeaderRecord = true,                 // Csv has header record. Deault: true
                 ConsoleOutput = true,                   // Output console during file prediction. Default: true
             };
 
@@ -62,8 +62,8 @@ namespace ftcc_console
             //var prediction = fTCC.Predict(text); // must be 2
             //Console.WriteLine(prediction);
 
-            
-            //fTCC.SerializeDiccionaries(dictionariesPath);
+
+            //TCC.SerializeDiccionaries(dictionariesPath);
         }
         private static void End()
         {

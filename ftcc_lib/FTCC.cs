@@ -253,9 +253,9 @@ namespace ftcc_lib
             byte[] bytes = Encoding.UTF8.GetBytes(text);
             double? minimumSize = null;
             string? predictedClass = null;
-            foreach (var item in Dictionaries)
+            foreach (var dictionary in Dictionaries)
             {
-                var length = GetLength(item.Value, bytes);
+                var length = GetLength(dictionary.Value, bytes);
                 if (length ==null)
                 {
                     continue;
@@ -263,18 +263,18 @@ namespace ftcc_lib
                 if (minimumSize == null || length < minimumSize)
                 {
                     minimumSize = length;
-                    predictedClass = item.Key;
+                    predictedClass = dictionary.Key;
                 }
             }
             return predictedClass!;
         }
 
-        private double? GetLength(List<byte[]> items, byte[] bytes)
+        private double? GetLength(List<byte[]> dictionaries, byte[] bytes)
         {
             List<int> list = new();
-            foreach (var item in items)
+            foreach (var dictionary in dictionaries)
             {
-                var compressionOptions = new CompressionOptions(item, FTCCOptions.CompressionLevel);
+                var compressionOptions = new CompressionOptions(dictionary, FTCCOptions.CompressionLevel);
                 using var compressor = new Compressor(compressionOptions);
                 var compressed = compressor.Wrap(bytes);
                 list.Add(compressed.Length);
@@ -283,7 +283,7 @@ namespace ftcc_lib
             {
                 return null;
             }
-            return list.Average();
+            return list.Average();            
         }
 
         public void SerializeDiccionaries(string path)

@@ -8,6 +8,8 @@ The main advantage of this type of classification is that it uses [ZSTD](https:/
 which allows for compression using dictionaries that have been generated beforehand, 
 thereby achieving significant speed improvements when classifying a text.
 
+Available as a [Nuget package](https://www.nuget.org/packages/ftcc/).
+
 ## Performance
 
 All tests have been done at a compression level of 3, which is the default compression level.
