@@ -22,7 +22,7 @@ Available as a [Nuget package](https://www.nuget.org/packages/ftcc/).
 
 All tests have been done at a compression level of 3, which is the default compression level.
 
-Compressors per class represents the number of compressors used in each class, or in other words, the number of dictionaries for each class.
+Compressors per class represents the number of dictionaries for each class.
 
 
 | Compressors per class    | AGNews  | DBpedia  | YahooAnswers  | R8       | R52      | Ohsumed  | Kinnews  |
