@@ -12,16 +12,19 @@ thereby achieving significant speed improvements when classifying a text.
 
 All tests have been done at a compression level of 3, which is the default compression level.
 
-| Compressors per class         | AGNews  | DBpedia  | R8       | R52      | Ohsumed  | Kinnews  |
-|-------------------------------|---------|----------|----------|----------|----------|----------|
-| CPC 1                         | 0.837   | 0.892    | 0.908    | 0.818    | 0.426    | 0.754    |
-| CPC 3                         | 0.876   | 0.918    | 0.912    | 0.803    | 0.374    | 0.766    |
-| CPC 5                         | 0.881   | 0.925    | 0.896    | 0.776    | 0.370    | 0.756    |
+Compressors per class represents the number of compressors used in each class, or in other words, the number of dictionaries for each class.
+
+
+| Compressors per class    | AGNews  | DBpedia  | YahooAnswers  | R8       | R52      | Ohsumed  | Kinnews  |
+|--------------------------|---------|----------|---------------|----------|----------|----------|----------|
+| CPC 1                    | 0.837   | 0.892    | 0.417         | 0.908    | 0.818    | 0.426    | 0.754    |
+| CPC 3                    | 0.876   | 0.918    | 0.517         | 0.912    | 0.803    | 0.374    | 0.766    |
+| CPC 5                    | 0.881   | 0.925    | 0.551         | 0.896    | 0.776    | 0.370    | 0.756    |
 
 
 ## Usage
 
-Predict csv test file:
+### Predict csv test file:
 
 ```cs
 
@@ -30,15 +33,16 @@ string testFile = @"C:\Users\Chus\Downloads\ag_news_test.csv";
 
 FTCCOptions fTCCOptions = new()
 {
-    TrainFile = trainFile,          // File path for csv train file
-    ParallelismOnCalc = false,      // Use paralelism on calc. Default: false
-    ParallelismToInitialize = true, // Use paralelism to initialize dictionaries. Default: false
-    ParallelismOnTestFile = true,   // Use paralelism for each test. Default: false
-    CompressionLevel = 3,           // Compression level for dictionaries. Default: 3
-    TextColumn = 0,                 // Text column number in csv file. Default: 0
-    LabelColumn = 1,                // Label column number in csv file. Default: 1
-    HasHeaderRecord = true,         // Csv has header record. Deault: true
-    ConsoleOutput = true,           // Output console during file prediction. Default: true
+    DictionariesPath = dictionariesPath,    // File path for preloaded dictionaries (ignores training file). Default: null;
+    TrainFile = trainFile,                  // File path for csv train file
+    ParallelismToInitialize = false,        // Use paralelism to initialize dictionaries. Default: false (if true, diccionaries will be a bit different for each execution)
+    ParallelismOnTestFile = true,           // Use paralelism for each test. Default: false
+    CompressionLevel = 3,                   // Compression level for dictionaries. Default: 3
+    CompressorsPerClass = 3,                // Number of compressors per class. Default: 3
+    TextColumn = 0,                         // Text column number in csv file. Default: 0
+    LabelColumn = 1,                        // Label column number in csv file. Default: 1
+    HasHeaderRecord = true,                 // Csv has header record. Deault: true
+    ConsoleOutput = true,                   // Output console during file prediction. Default: true
 };
 
 FTCC fTCC = new(fTCCOptions);
@@ -47,9 +51,40 @@ Console.WriteLine(result);
 
 ```
 
-Single text prediction:
+### Single text prediction:
+
 ```cs
 string text = "Socialites unite dolphin groups Dolphin groups, or \"pods\", rely on socialites to keep them from collapsing, scientists claim.";
 var prediction = fTCC.Predict(text);
 Console.WriteLine(prediction);
 ```
+
+### Dictionary serialisation:
+
+Serializing the dictionaries allows for preloading the FTCC objects later on, 
+so that it doesn't need to create the dictionaries, but instead reads them from file. 
+This way, it allows for immediate text classification.
+
+```cs
+
+string dictionariesPath = @"C:\Users\Chus\Downloads\dictionaries.ftcc";
+fTCC.SerializeDiccionaries(dictionariesPath);
+
+```
+
+To create the FTCC object with the serialized dictionaries:
+
+```cs
+
+FTCCOptions fTCCOptions = new()
+{
+    DictionariesPath = dictionariesPath
+};
+
+FTCC fTCC = new(fTCCOptions);
+
+```
+
+
+
+

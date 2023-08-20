@@ -5,17 +5,12 @@
         /// <summary>
         /// File path for preloaded dictionaries (ignores training file).
         /// </summary>
-        public string? PreloadedDictionaries { get; set; } = null;
+        public string? DictionariesPath { get; set; } = null;
 
         /// <summary>
         /// File path for csv train file.
         /// </summary>
-        public string TrainFile { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Use paralelism on calc. 
-        /// </summary>
-        public bool ParallelismOnCalc { get; set; } = false;
+        public string TrainFile { get; set; } = string.Empty;        
 
         /// <summary>
         /// Use paralelism to initialize dictionaries (if true, diccionaries will be a bit different for each execution).

@@ -16,9 +16,9 @@ namespace ftcc_lib
         public FTCC(FTCCOptions fTCCOptions)
         {
             FTCCOptions = fTCCOptions;
-            if (FTCCOptions.PreloadedDictionaries != null)
+            if (FTCCOptions.DictionariesPath != null)
             {
-                Dictionaries = Serialization.Deserialize(FTCCOptions.PreloadedDictionaries);
+                Dictionaries = Serialization.Deserialize(FTCCOptions.DictionariesPath);
             }
             else
             {
@@ -286,7 +286,7 @@ namespace ftcc_lib
             return list.Average();
         }
 
-        public void SerializeDiccionary(string path)
+        public void SerializeDiccionaries(string path)
         {
             Serialization.Serialize(path, Dictionaries);
         }
