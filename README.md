@@ -10,6 +10,14 @@ thereby achieving significant speed improvements when classifying a text.
 
 Available as a [Nuget package](https://www.nuget.org/packages/ftcc/).
 
+## Features
+
+- Configure compressors for each class.
+- Enable parallelism during dictionary creation.
+- Determine the desired compression level.
+- Handle the serialization and deserialization of dictionaries.
+- Evaluate the training files.
+
 ## Performance
 
 All tests have been done at a compression level of 3, which is the default compression level.
