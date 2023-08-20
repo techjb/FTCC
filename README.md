@@ -34,16 +34,15 @@ Compressors per class represents the number of dictionaries for each class.
 
 ## Usage
 
-### Predict csv test file:
+### Initialization:
 
 ```cs
 
 string trainFile = @"C:\Users\Chus\Downloads\ag_news_train.csv";
-string testFile = @"C:\Users\Chus\Downloads\ag_news_test.csv";
 
 FTCCOptions fTCCOptions = new()
 {
-    DictionariesPath = dictionariesPath,    // File path for preloaded dictionaries (ignores training file). Default: null;
+    DictionariesPath = null,                // File path for preloaded dictionaries (ignores training file). Default: null;
     TrainFile = trainFile,                  // File path for csv train file
     ParallelismToInitialize = false,        // Use paralelism to initialize dictionaries. Default: false (if true, diccionaries will be a bit different for each execution)
     ParallelismOnTestFile = true,           // Use paralelism for each test. Default: false
@@ -56,6 +55,14 @@ FTCCOptions fTCCOptions = new()
 };
 
 FTCC fTCC = new(fTCCOptions);
+
+```
+
+### Predict csv test file:
+
+```cs
+
+string testFile = @"C:\Users\Chus\Downloads\ag_news_test.csv";
 double result = fTCC.PredictFile(testFile);
 Console.WriteLine(result);
 
