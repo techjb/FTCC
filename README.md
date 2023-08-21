@@ -12,11 +12,11 @@ Available as a [Nuget package](https://www.nuget.org/packages/ftcc/).
 
 ## Features
 
-- Configure compressors for each class.
+- Set the number of compressors per class.
 - Enable parallelism during dictionary creation.
 - Determine the desired compression level.
 - Handle the serialization and deserialization of dictionaries.
-- Evaluate the training files.
+- Evaluate training files.
 
 ## Performance
 
