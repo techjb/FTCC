@@ -48,9 +48,9 @@ namespace ftcc_console
                 ParallelismOnTestFile = true,           // Use paralelism for each test. Default: false
                 CompressionLevel = 3,                   // Compression level for dictionaries. Default: 3
                 CompressorsPerClass = 3,                // Number of compressors per class. Default: 3
-                TextColumn = 0,                         // Text column number in csv file. Default: 0
-                LabelColumn = 1,                        // Label column number in csv file. Default: 1
-                HasHeaderRecord = true,                 // Csv has header record. Deault: true
+                TextColumn = 0,                         // Text column number in train file. Default: 0
+                LabelColumn = 1,                        // Label column number in train file. Default: 1
+                HasHeaderRecord = true,                 // Train file has header record. Deault: true
                 ConsoleOutput = true,                   // Output console during file prediction. Default: true
             };
 
