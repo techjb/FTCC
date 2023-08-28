@@ -175,6 +175,7 @@ namespace ftcc_lib
                 var values = DivideList(item.Value);
                 TrainingListChunked.Add(item.Key, values);
             }
+            TrainingList.Clear();
         }
 
         List<List<byte[]>> DivideList(List<byte[]> mainList)
@@ -207,6 +208,7 @@ namespace ftcc_lib
             {
                 InitializeDictionariesWithoutParalellism();
             }
+            TrainingListChunked.Clear();
         }
 
         private void InitializeDictionariesWithParalellism()
@@ -255,8 +257,8 @@ namespace ftcc_lib
             string? predictedClass = null;
             foreach (var dictionary in Dictionaries)
             {
-                var length = GetLength(dictionary.Value, bytes);
-                if (length ==null)
+                var length = GetLength(dictionary.Value, bytes);                
+                if (length == null)
                 {
                     continue;
                 }
@@ -274,16 +276,17 @@ namespace ftcc_lib
             List<int> list = new();
             foreach (var dictionary in dictionaries)
             {
-                var compressionOptions = new CompressionOptions(dictionary, FTCCOptions.CompressionLevel);
+                using var compressionOptions = new CompressionOptions(dictionary, FTCCOptions.CompressionLevel);
                 using var compressor = new Compressor(compressionOptions);
                 var compressed = compressor.Wrap(bytes);
                 list.Add(compressed.Length);
+                compressor.Dispose();
             }
-            if(list.Count.Equals(0))
+            if (list.Count.Equals(0))
             {
                 return null;
             }
-            return list.Average();            
+            return list.Average();
         }
 
         public void SerializeDiccionaries(string path)

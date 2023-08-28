@@ -22,7 +22,8 @@ namespace ftcc_console
 
         private static void Run()
         {
-            string dictionariesPath = @"C:\Users\Chus\Downloads\ag_news_dictionary.ftcc";            
+            //string dictionariesPath = @"C:\Users\Chus\Downloads\ag_news_dictionary.ftcc";            
+            string? dictionariesPath = null;
 
             string trainFile = @"C:\Users\Chus\Downloads\ag_news_train.csv";
             string testFile = @"C:\Users\Chus\Downloads\ag_news_test.csv";
