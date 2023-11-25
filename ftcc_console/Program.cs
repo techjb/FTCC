@@ -22,11 +22,13 @@ namespace ftcc_console
 
         private static void Run()
         {
-            //string dictionariesPath = @"C:\Users\Chus\Downloads\ag_news_dictionary.ftcc";            
-            string? dictionariesPath = null;
+            //string? dictionariesPath = @"E:\Landerist\Classifier\is_listing_dictionary.ftcc";
+            //string trainFile = @"E:\Landerist\Classifier\is_listing_training.csv";
+            //string testFile = @"E:\Landerist\Classifier\is_listing_test.csv";
 
-            string trainFile = @"C:\Users\Chus\Downloads\ag_news_train.csv";
-            string testFile = @"C:\Users\Chus\Downloads\ag_news_test.csv";
+            //string dictionariesPath = @"C:\Users\Chus\Downloads\ftcc-tests\ag_news_dictionary.ftcc";
+            //string trainFile = @"C:\Users\Chus\Downloads\ftcc-tests\ag_news_train.csv";
+            //string testFile = @"C:\Users\Chus\Downloads\ftcc-tests\ag_news_test.csv";
 
             //string trainFile = @"C:\Users\Chus\Downloads\DBPEDIA_train.csv";
             //string testFile = @"C:\Users\Chus\Downloads\DBPEDIA_test.csv";
@@ -42,7 +44,7 @@ namespace ftcc_console
 
             FTCCOptions fTCCOptions = new()
             {
-                DictionariesPath = dictionariesPath,    // File path for preloaded dictionaries (ignores training file). Default: null;
+                //DictionariesPath = dictionariesPath,    // File path for preloaded dictionaries (ignores training file). Default: null;
                 TrainFile = trainFile,                  // File path for csv train file
                 ParallelismToInitialize = false,        // Use paralelism to initialize dictionaries. Default: false (if true, diccionaries will be a bit different for each execution)
                 ParallelismOnTestFile = true,           // Use paralelism for each test. Default: false
@@ -55,8 +57,8 @@ namespace ftcc_console
             };
 
             FTCC fTCC = new(fTCCOptions);
+
             double result = fTCC.PredictFile(testFile);
-            Console.WriteLine();
             Console.WriteLine(result);
 
             //string text = "Fears for T N pension after talks Unions representing workers at Turner   Newall say they are 'disappointed' after talks with stricken parent firm Federal Mogul.";
@@ -64,7 +66,7 @@ namespace ftcc_console
             //Console.WriteLine(prediction);
 
 
-            //TCC.SerializeDiccionaries(dictionariesPath);
+            //fTCC.SerializeDiccionaries(dictionariesPath);
         }
         private static void End()
         {

@@ -257,7 +257,7 @@ namespace ftcc_lib
             string? predictedClass = null;
             foreach (var dictionary in Dictionaries)
             {
-                var length = GetLength(dictionary.Value, bytes);                
+                var length = GetLength(dictionary.Value, bytes);
                 if (length == null)
                 {
                     continue;
