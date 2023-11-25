@@ -26,9 +26,9 @@ namespace ftcc_console
             //string trainFile = @"E:\Landerist\Classifier\is_listing_training.csv";
             //string testFile = @"E:\Landerist\Classifier\is_listing_test.csv";
 
-            //string dictionariesPath = @"C:\Users\Chus\Downloads\ftcc-tests\ag_news_dictionary.ftcc";
-            //string trainFile = @"C:\Users\Chus\Downloads\ftcc-tests\ag_news_train.csv";
-            //string testFile = @"C:\Users\Chus\Downloads\ftcc-tests\ag_news_test.csv";
+            string dictionariesPath = @"C:\Users\Chus\Downloads\ftcc-tests\ag_news_dictionary.ftcc";
+            string trainFile = @"C:\Users\Chus\Downloads\ftcc-tests\ag_news_train.csv";
+            string testFile = @"C:\Users\Chus\Downloads\ftcc-tests\ag_news_test.csv";
 
             //string trainFile = @"C:\Users\Chus\Downloads\DBPEDIA_train.csv";
             //string testFile = @"C:\Users\Chus\Downloads\DBPEDIA_test.csv";
@@ -44,7 +44,7 @@ namespace ftcc_console
 
             FTCCOptions fTCCOptions = new()
             {
-                //DictionariesPath = dictionariesPath,    // File path for preloaded dictionaries (ignores training file). Default: null;
+                DictionariesPath = dictionariesPath,    // File path for preloaded dictionaries (ignores training file). Default: null;
                 TrainFile = trainFile,                  // File path for csv train file
                 ParallelismToInitialize = false,        // Use paralelism to initialize dictionaries. Default: false (if true, diccionaries will be a bit different for each execution)
                 ParallelismOnTestFile = true,           // Use paralelism for each test. Default: false
