@@ -58,15 +58,14 @@ namespace ftcc_console
 
             FTCC fTCC = new(fTCCOptions);
 
+            //fTCC.SerializeDiccionaries(dictionariesPath);
+
             double result = fTCC.PredictFile(testFile);
             Console.WriteLine(result);
 
             //string text = "Fears for T N pension after talks Unions representing workers at Turner   Newall say they are 'disappointed' after talks with stricken parent firm Federal Mogul.";
             //var prediction = fTCC.Predict(text); // must be 2
             //Console.WriteLine(prediction);
-
-
-            //fTCC.SerializeDiccionaries(dictionariesPath);
         }
         private static void End()
         {
